@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: telemeter-reporter-server
+  name: telemeter-reporter-server
+  namespace: sd-sre
+  resourceVersion: '60630353'
+  selfLink: /api/v1/namespaces/sd-sre/services/telemeter-reporter-server
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+    - nodePort: 32352
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: telemeter-reporter-server
+  sessionAffinity: None
+  type: LoadBalancer

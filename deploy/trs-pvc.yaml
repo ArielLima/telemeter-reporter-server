@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"018a7bcc-db6c-11e9-9a70-0a58ac3600ed","leaseDurationSeconds":15,"acquireTime":"2019-09-21T00:18:47Z","renewTime":"2019-09-21T00:18:49Z","leaderTransitions":0}'
+    pv.kubernetes.io/bind-completed: "yes"
+    pv.kubernetes.io/bound-by-controller: "yes"
+    volume.beta.kubernetes.io/storage-provisioner: infinidat.com/nfs
+  finalizers:
+  - kubernetes.io/pvc-protection
+  name: telemeter-reporter-storage-claim
+  namespace: sd-sre
+  resourceVersion: "232033681"
+  selfLink: /api/v1/namespaces/sd-sre/persistentvolumeclaims/telemeter-reporter-storage-claim
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: dynamic-nfs
+  volumeName: k8s-616a1e49-dc05-11e9-ab18-fa163eda9ab7
+status:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 2Gi
+  phase: Bound

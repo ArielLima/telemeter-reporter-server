@@ -1,0 +1,20 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: telemeter-reporter-server
+  name: telemeter-reporter-server-https
+  namespace: sd-sre
+  resourceVersion: '60630961'
+  selfLink: >-
+    /apis/route.openshift.io/v1/namespaces/sd-sre/routes/telemeter-reporter-server-https
+spec:
+  host: telemeter-reporter.cloud.paas.psi.redhat.com
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: telemeter-reporter-server
+    weight: 100
+  wildcardPolicy: None

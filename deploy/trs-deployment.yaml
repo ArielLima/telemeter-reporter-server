@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+  generation: 5
+  labels:
+    app: telemeter-reporter-server
+  name: telemeter-reporter-server
+  namespace: sd-sre
+  resourceVersion: '70851487'
+  selfLink: >-
+    /apis/apps/v1/namespaces/sd-sre/deployments/telemeter-reporter-server
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: telemeter-reporter-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: telemeter-reporter-server
+    spec:
+      containers:
+        - env:
+            - name: TELEMETER_REPORTER_SERVER_ROOT
+              value: /telemeter-reporter-storage/reports
+          image: >-
+            docker-registry.default.svc:5000/sd-sre/telemeter-reporter-server:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /alive
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: telemeter-reporter-server
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /latest
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 250m
+              memory: 300Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /telemeter-reporter-storage
+              name: telemeter-reporter-storage
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: telemeter-reporter-storage
+          persistentVolumeClaim:
+            claimName: telemeter-reporter-storage-claim
